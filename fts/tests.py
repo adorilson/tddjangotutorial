@@ -7,6 +7,7 @@ class PollsTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
 
     def tearDown(self):
         self.browser.quit()
@@ -36,10 +37,9 @@ class PollsTest(LiveServerTestCase):
         polls_links = self.browser.find_elements_by_link_text('Polls')
         self.assertEquals(len(polls_links), 2)
         
-		# TODO: Gertrude uses the admin site to create a new Poll
         # The second one looks more exciting, so she clicks it
-        #polls_links[1].click()
-        self.browser.get(self.live_server_url +  '/admin/polls/poll/')
+        polls_links[1].click()
+        #self.browser.get(self.live_server_url +  '/admin/polls/poll/')
 
         # She is taken to the polls listing page, which shows she has
         # no polls yet
@@ -48,15 +48,15 @@ class PollsTest(LiveServerTestCase):
 
         # She sees a link to 'add' a new poll, so she clicks it
         new_poll_link = self.browser.find_element_by_link_text('Add poll')
-        #new_poll_link.click()
-        self.browser.get(self.live_server_url +  '/admin/polls/poll/add/')
+        new_poll_link.click()
+        #self.browser.get(self.live_server_url +  '/admin/polls/poll/add/')
 
         # She sees some input fields for "Question" and "Data published"
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Question:', body.text)
         self.assertIn('Date published:', body.text)
 
-		# She types in an interesting question for the Poll
+        # She types in an interesting question for the Poll
         question_field = self.browser.find_element_by_name('question')
         question_field.send_keys(u'How awesome is Test-Driven Development?')
        
@@ -65,6 +65,15 @@ class PollsTest(LiveServerTestCase):
         date_field.send_keys('01/01/12')
         time_field = self.browser.find_element_by_name('pub_date_1')
         time_field.send_keys('00:00')
+
+
+        # She sees she can enter choices fot the Poll. She adds three
+        choice_1 = self.browser.find_element_by_name('choice_set-0-choice')
+        choice_1.send_keys('Very awesome')
+        choice_2 = self.browser.find_element_by_name('choice_set-1-choice')
+        choice_2.send_keys('Quite awesome')
+        choice_3 = self.browser.find_element_by_name('choice_set-2-choice')
+        choice_3.send_keys('Moderately awesome')
 
         # Gertrude clicks the save button
         save_button = self.browser.find_element_by_css_selector("input[value='Save']")
@@ -76,6 +85,5 @@ class PollsTest(LiveServerTestCase):
                        "How awesome is Test-Driven Development?"
                        )
         self.assertEquals(len(new_poll_links), 1)
-
-
-        self.fail('finish this test')
+        
+        # Satisfied, she goes back to sleep
