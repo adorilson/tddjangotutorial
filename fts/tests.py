@@ -158,15 +158,28 @@ class PollsTest(LiveServerTestCase):
         # First, Gertrude the administrator logs into admin site and
         # creates a couple of news Polls, and theis response choice_1
         self._setup_polls_via_admin()
-        self.fail('TODO')
+
         # Now, Herbert the regular user goes to homepage of the site. He
         # sees a list of polls.
+        self.browser.get(self.live_server_url)
+        heading = self.browser.find_element_by_tag_name('h1')
+        self.assertEquals(heading.text, 'Polls')
 
         # He clicks on the link to the first poll, which is called
         # 'How awesome is Test-Driven Development?'
+        first_poll_title = POLL1.question
+        self.browser.find_element_by_link_text(first_poll_title).click()
 
         # He is taken to a poll 'results' page, which says
         # "no-one has voted on this poll yet"
+        main_heading = self.browser.find_element_by_tag_name('h1')
+        self.assertEquals(main_heading.text, 'Poll Results')
+        sub_heading = self.browser.find_element_by_tag_name('h2')
+        self.assertEquals(sub_heading.text, first_poll_title)
+        body = self.browser.find_element_by_tag_name('body')
+        self.assertIn('No-one has voted on this poll yet', body.text)
+
+        self.fail('TODO')
 
         # He also sees a form, which offers him several choices.
         # He decided to select "very awesome"
