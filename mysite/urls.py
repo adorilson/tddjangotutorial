@@ -6,7 +6,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'polls.views.home', name='home'),
+    url(r'^$', 'polls.views.home'),
+    url(r'^poll/(\d+)/$', 'polls.views.poll'),
     # url(r'^mysite/', include('mysite.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
