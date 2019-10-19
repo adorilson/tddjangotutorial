@@ -179,16 +179,34 @@ class PollsTest(LiveServerTestCase):
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('No-one has voted on this poll yet', body.text)
 
-        self.fail('TODO')
-
         # He also sees a form, which offers him several choices.
+        # There are three options with radio buttons
+        choice_inputs = self.browser.find_elements_by_css_selector(
+                "input[type='radio']"
+        )
+        self.assertEquals(len(choice_inputs), 3)
+
+        # The buttons have labels to explain them
+        choice_labels = self.browser.find_elements_by_tag_name('label')
+        choices_text = [c.text for c in choice_labels]
+        # TODO to send this patch
+        self.assertEquals(choices_text, ['Vote:'] + POLL1.choices)
+
         # He decided to select "very awesome"
+        chosen = self.browser.find_element_by_css_selector(
+                "input[value='1']"
+        )
+        chosen.click()
 
         # He clicks 'submit'
+        self.browser.find_element_by_css_selector(
+                "input[type='submit']"
+        ).click()
 
         # The page refreshes, and he sees that his choice
         # has updated the results. They now say
         # "100% : very awesome".
+        self.fail('TODO')
 
         # The page also says "1 votes"
 

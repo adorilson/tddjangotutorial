@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, include, url
 
+from mysite.views import *
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -15,4 +17,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    
+    url(r'^line_chart_json/', line_chart_json),
+    url(r'^line_chart/', line_chart)
 )
